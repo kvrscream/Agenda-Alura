@@ -24,6 +24,8 @@ import java.util.List;
 //Usar a AppCompatActivity da suport a várias versões antigas no android
 public class MainActivity extends AppCompatActivity {
 
+    private ArrayAdapter<Aluno> adapter;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,10 +66,37 @@ public class MainActivity extends AppCompatActivity {
 
         ListView lista = findViewById(R.id.listVW);
 
-        lista.setAdapter(
-                new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, alunos)
-        );
+        carregaAlunos(lista, alunos);
 
+        abreAlunoEdita(lista, alunos);
+        excluiAluno(lista, dao);
+
+    }
+
+
+    private void carregaAlunos(ListView lista, final List<Aluno> alunos){
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, alunos);
+        lista.setAdapter(
+            adapter
+        );
+    }
+
+    private void excluiAluno(final ListView lista, final AlunoDAO dao) {
+
+        lista.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Aluno alunoEscolhido = (Aluno) adapterView.getItemAtPosition(i);
+                dao.remove(alunoEscolhido);
+                adapter.remove(alunoEscolhido);
+                return true;
+            }
+        });
+
+    }
+
+
+    public void abreAlunoEdita(ListView lista, final List<Aluno> alunos){
         lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -81,6 +110,5 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
     }
 }

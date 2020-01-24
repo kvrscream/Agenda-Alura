@@ -33,6 +33,11 @@ public class AlunoDAO {
         }
     }
 
+
+    public void remove(Aluno aluno){
+        alunos.remove(aluno);
+    }
+
     public List<Aluno> todos() {
         return new ArrayList<>(alunos);
     }
