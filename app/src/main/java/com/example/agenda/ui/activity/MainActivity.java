@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -25,6 +28,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private ArrayAdapter<Aluno> adapter;
+    AlunoDAO dao = new AlunoDAO();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -32,7 +36,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         setTitle("Lista de Alunos");
-
 
 
         List<String> alunos = new ArrayList<>(Arrays.asList("Felipe", "Biah", "Bruno"));
@@ -45,31 +48,41 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, FormularioAlunoActivity.class));
             }
         });
+    }
 
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        menu.add("Remover");
+    }
 
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
 
+        AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        Aluno alunoEscolhido = adapter.getItem(menuInfo.position);
+        remove(alunoEscolhido);
 
+        return super.onContextItemSelected(item);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
         configuraLista();
     }
 
 
     private void configuraLista(){
-        AlunoDAO dao = new AlunoDAO();
-
         final List<Aluno> alunos = dao.todos();
 
         ListView lista = findViewById(R.id.listVW);
 
         carregaAlunos(lista, alunos);
 
+        registerForContextMenu(lista);
+
         abreAlunoEdita(lista, alunos);
-        excluiAluno(lista, dao);
 
     }
 
@@ -81,20 +94,11 @@ public class MainActivity extends AppCompatActivity {
         );
     }
 
-    private void excluiAluno(final ListView lista, final AlunoDAO dao) {
 
-        lista.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Aluno alunoEscolhido = (Aluno) adapterView.getItemAtPosition(i);
-                dao.remove(alunoEscolhido);
-                adapter.remove(alunoEscolhido);
-                return true;
-            }
-        });
-
+    public void remove(Aluno aluno){
+        dao.remove(aluno);
+        adapter.remove(aluno);
     }
-
 
     public void abreAlunoEdita(ListView lista, final List<Aluno> alunos){
         lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
