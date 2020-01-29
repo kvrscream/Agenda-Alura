@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.example.agenda.R;
 import com.example.agenda.dao.AlunoDAO;
 import com.example.agenda.model.Aluno.Aluno;
+import com.example.agenda.ui.adapter.ListaAlunosAdapter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,7 +28,7 @@ import java.util.List;
 //Usar a AppCompatActivity da suport a várias versões antigas no android
 public class MainActivity extends AppCompatActivity {
 
-    private ArrayAdapter<Aluno> adapter;
+    private ListaAlunosAdapter adapter;
     AlunoDAO dao = new AlunoDAO();
 
     @Override
@@ -36,9 +37,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         setTitle("Lista de Alunos");
-
-
-        List<String> alunos = new ArrayList<>(Arrays.asList("Felipe", "Biah", "Bruno"));
 
         FloatingActionButton addButton = findViewById(R.id.floatingActionButton3);
 
@@ -90,10 +88,9 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void carregaAlunos(ListView lista, final List<Aluno> alunos){
-        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, alunos);
-        lista.setAdapter(
-            adapter
-        );
+        adapter = new ListaAlunosAdapter(this);
+        adapter.addAll(dao.todos());
+        lista.setAdapter(adapter);
     }
 
 
