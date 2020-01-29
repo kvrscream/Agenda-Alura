@@ -53,16 +53,18 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
-        menu.add("Remover");
+
+        getMenuInflater().inflate(R.menu.activity_lista_alunos_menu, menu);
     }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
 
-        AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        Aluno alunoEscolhido = adapter.getItem(menuInfo.position);
-        remove(alunoEscolhido);
-
+        if(item.getItemId() == R.id.remover){
+            AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+            Aluno alunoEscolhido = adapter.getItem(menuInfo.position);
+            remove(alunoEscolhido);
+        }
         return super.onContextItemSelected(item);
     }
 

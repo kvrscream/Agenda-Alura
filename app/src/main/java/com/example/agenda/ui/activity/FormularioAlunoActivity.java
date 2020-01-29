@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,13 +21,13 @@ public class FormularioAlunoActivity extends AppCompatActivity {
     EditText edtEmail;
     EditText edtTelefone;
     private Aluno aluno;
+    AlunoDAO dao = new AlunoDAO();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_formulario_aluno);
 
-        final AlunoDAO dao = new AlunoDAO();
         setTitle("Fromulário de Cadastro");
 
         Button btnSalva = findViewById(R.id.btnSalvar);
@@ -49,22 +51,37 @@ public class FormularioAlunoActivity extends AppCompatActivity {
         btnSalva.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                preencheAluno();
 
-                if(aluno.getId() > 0) {
-                    dao.edit(aluno);
-                } else {
-                    dao.salva(aluno);
-                }
-                finish();
-
+                salvarAlterarAluno();
             }
         });
 
 
+    }
 
+    public void salvarAlterarAluno(){
+        preencheAluno();
 
+        if(aluno.getId() > 0) {
+            dao.edit(aluno);
+        } else {
+            dao.salva(aluno);
+        }
+        finish();
+    }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_formulario_salvar_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.menu_salvar){
+            salvarAlterarAluno();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 
