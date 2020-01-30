@@ -51,7 +51,6 @@ public class FormularioAlunoActivity extends AppCompatActivity {
         btnSalva.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 salvarAlterarAluno();
             }
         });

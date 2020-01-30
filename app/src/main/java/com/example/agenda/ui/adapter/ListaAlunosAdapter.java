@@ -42,20 +42,26 @@ public class ListaAlunosAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         View viewCriada = LayoutInflater.from(context).inflate(R.layout.layout_item_aluno, parent, false);
 
+        pegaItensViewCriada(position, viewCriada);
+
+        return viewCriada;
+    }
+
+    private void pegaItensViewCriada(int position, View viewCriada) {
         TextView txtAlunoNome = (TextView) viewCriada.findViewById(R.id.txtAlunoNome);
         txtAlunoNome.setText(alunos.get(position).getNome());
 
         TextView txtAlunoTelefone = (TextView) viewCriada.findViewById(R.id.txtAlunoTelefone);
         txtAlunoTelefone.setText(alunos.get(position).getTelefone());
-
-        return viewCriada;
     }
 
     public void remove(Aluno aluno) {
         alunos.remove(aluno);
+        notifyDataSetChanged();
     }
 
     public void addAll(List<Aluno> todos) {
         alunos.addAll(todos);
+        notifyDataSetChanged();
     }
 }

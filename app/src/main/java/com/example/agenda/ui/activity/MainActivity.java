@@ -1,6 +1,8 @@
 package com.example.agenda.ui.activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -56,12 +58,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onContextItemSelected(MenuItem item) {
+    public boolean onContextItemSelected(final MenuItem item) {
 
         if(item.getItemId() == R.id.remover){
-            AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-            Aluno alunoEscolhido = adapter.getItem(menuInfo.position);
-            remove(alunoEscolhido);
+            new AlertDialog.Builder(this)
+                    .setTitle("Voce deseja excluir esse aluno?")
+                    .setMessage("Ao confirmar este aluno não poderá mais ser recuperado!")
+                    .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+                            Aluno alunoEscolhido = adapter.getItem(menuInfo.position);
+                            remove(alunoEscolhido);
+                        }
+                    })
+                    .setNegativeButton("Não", null)
+                    .show();
+
         }
         return super.onContextItemSelected(item);
     }
